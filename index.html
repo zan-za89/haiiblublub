@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sebuah Kejutan Manis untukmu! 💖</title>
+    
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ffe0e6, #fffafa); /* Gradien pink muda ke putih */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px; 
+            padding: 35px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4); /* Bayangan pink cerah */
+            border: 3px dashed #ff69b4; /* Hot Pink */
+        }
+
+        h1 {
+            color: #ff69b4; /* Hot Pink */
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            line-height: 1.2;
+            text-shadow: 2px 2px #ffebee; /* Bayangan teks lembut */
+        }
+
+        p.instruction {
+            color: #555;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        /* --- Area Gosok --- */
+        .scratch-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* Lebar maksimum foto */
+            height: 400px; /* Tinggi foto */
+            margin: 0 auto 30px;
+            border: 5px solid #ff69b4;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        /* Konten Tersembunyi: Foto di lapisan bawah */
+        .hidden-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1; /* Di bawah teks surat */
+        }
+
+        .hidden-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Konten Teks Surat: Di atas foto, muncul belakangan */
+        .long-text-content {
+            position: absolute;
+            top: 10%; /* Posisi sedikit ke bawah dari atas */
+            left: 10%; /* Posisi sedikit ke kanan dari kiri */
+            width: 80%; /* Lebar surat */
+            height: 80%; /* Tinggi surat */
+            background-color: rgba(255, 250, 240, 0.95); /* Warna kertas krem transparan */
+            border: 1px solid #ffb6c1; /* Border pink muda */
+            border-radius: 8px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+            text-align: left;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            z-index: 2; /* Di atas gambar */
+            opacity: 0; /* Awalnya tersembunyi */
+            transform: scale(0.9); /* Sedikit mengecil */
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .long-text-content.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Pesan dan Tombol Ajakan (muncul setelah surat) */
+        .message-after-reveal {
+            margin-top: 30px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out 0.8s; /* Delay lebih lama */
+        }
+        
+        .message-after-reveal.show {
+            opacity: 1;
+        }
+
+        .message-after-reveal h2 {
+            color: #00bcd4;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .message-after-reveal button {
+            background-image: linear-gradient(45deg, #ff8c00 0%, #ff4500 100%); /* Gradien oranye */
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin: 20px auto 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px #cc3700;
+        }
+
+        .message-after-reveal button:active {
+            transform: translateY(4px);
+            box-shadow: 0 0 #cc3700;
+        }
+
+        /* Lapisan Canvas yang Akan Digosok */
+        #scratchCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10; /* Pastikan ini di paling atas untuk digosok */
+            cursor: grab;
+            touch-action: none; 
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>haii!!! <br> alasan aku buat ini warna pink <br> adalah karna keingat kamu yang suka ultra stroberi ehe</h1>
+        <p class="instruction">Gosok seperti hadiah di tango mungkin yang pake koin itu </p>
+        
+        <div class="scratch-container" id="scratchContainer">
+            <div class="hidden-image">
+                <img src="image.png" alt="Foto Kenangan Terbaik" id="targetImage">
+            </div>
+            
+            <div class="long-text-content" id="longTextContent">
+                haiii!!! gimana kabar kamu?aku pengen bilang semangat aja buat kamu 
+                kamu lagi banyak ujian yaa sekarang?semangatt yaa jangan lupa istirahatt. semoga kamu ngga terlalu suka makan pedes lagii ehee itu aja sihh !!! Proud of you yaa!!!semangatt di fk nya yaaaa....btw aku ngga pake telegraph lagi wkwkwk
+            </div>
+
+            <canvas id="scratchCanvas"></canvas>
+        </div>
+
+        <div class="message-after-reveal" id="revealMessage">
+            <h2>Gimana kabarnya kamuuu?</h2>
+            
+            <a id="instagramLink" 
+               href="https://www.instagram.com/direct/t/17843120637070410/" 
+               target="_blank"
+               rel="noopener noreferrer">
+                <button> You can reply to this message </button>
+            </a>
+            <p style="font-size: 0.8em; margin-top: 10px; color: #777;">semangatt yaaa</p>
+
+        <p class="footer"><fu-fish></fu-fish></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('scratchCanvas');
+            const ctx = canvas.getContext('2d');
+            const scratchContainer = document.getElementById('scratchContainer');
+            const longTextContent = document.getElementById('longTextContent');
+            const revealMessage = document.getElementById('revealMessage');
+            
+            // Pengaturan Efek Gosok
+            const REVEAL_THRESHOLD = 70; // Persentase area yang harus digosok
+            const BRUSH_RADIUS = 50; // Kuas sangat besar
+            const TEXT_REVEAL_DELAY = 1500; // Delay 1.5 detik sebelum teks muncul setelah foto
+
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+            let totalPixels;
+            let currentWidth, currentHeight; 
+            let hasRevealedImage = false; // Flag untuk melacak apakah gambar sudah muncul
+
+            function getCursorPosition(event) {
+                const rect = canvas.getBoundingClientRect();
+                let clientX, clientY;
+                
+                if (event.touches) {
+                    clientX = event.touches[0].clientX;
+                    clientY = event.touches[0].clientY;
+                } else {
+                    clientX = event.clientX;
+                    clientY = event.clientY;
+                }
+                
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
+                return { x, y };
+            }
+            
+            function scratch(x, y, isMove = false) {
+                ctx.globalCompositeOperation = 'destination-out';
+                
+                if (isMove) {
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(x, y);
+                    ctx.lineWidth = BRUSH_RADIUS * 2;
+                    ctx.lineCap = 'round';
+                    ctx.strokeStyle = '#000'; 
+                    ctx.stroke();
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(x, y, BRUSH_RADIUS, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+
+                lastX = x;
+                lastY = y;
+            }
+
+            function updateProgress() {
+                if (hasRevealedImage) return; // Jika gambar sudah muncul, tidak perlu cek progress lagi
+
+                const imageData = ctx.getImageData(0, 0, currentWidth, currentHeight);
+                let clearedPixels = 0;
+                
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    if (imageData.data[i + 3] === 0) { 
+                        clearedPixels++;
+                    }
+                }
+
+                const percentage = (clearedPixels / totalPixels) * 100;
+                
+                if (percentage >= REVEAL_THRESHOLD && !hasRevealedImage) {
+                    // Tahap 1: Foto Muncul
+                    ctx.clearRect(0, 0, currentWidth, currentHeight);
+                    canvas.style.display = 'none'; // Sembunyikan canvas setelah digosok
+                    hasRevealedImage = true; // Set flag
+                    
+                    // Setelah foto muncul, tunggu sebentar lalu munculkan teks dan tombol
+                    setTimeout(() => {
+                        longTextContent.classList.add('show');
+                        setTimeout(() => {
+                             revealMessage.classList.add('show');
+                        }, TEXT_REVEAL_DELAY);
+                    }, 500); // Sedikit delay agar gambar "bernafas" dulu
+
+                    canvas.removeEventListener('mousemove', scratchMove);
+                    canvas.removeEventListener('touchmove', scratchMove);
+                }
+            }
+
+            function initScratchLayer() {
+                currentWidth = scratchContainer.offsetWidth;
+                currentHeight = scratchContainer.offsetHeight;
+                canvas.width = currentWidth;
+                canvas.height = currentHeight;
+
+                ctx.globalCompositeOperation = 'source-over'; 
+                ctx.fillStyle = '#ffc0cb'; /* Warna Pink Lembut */
+                ctx.fillRect(0, 0, currentWidth, currentHeight);
+                
+                totalPixels = currentWidth * currentHeight; 
+
+                // Memberi pesan petunjuk
+                ctx.fillStyle = '#800000';
+                ctx.font = 'bold 30px "Comic Sans MS", cursive';
+                ctx.textAlign = 'center';
+                ctx.fillText('GOSOK AKU!', currentWidth / 2, currentHeight / 2 - 25);
+                ctx.font = '20px "Comic Sans MS", cursive';
+                ctx.fillText('Ada kejutan di baliknya...', currentWidth / 2, currentHeight / 2 + 15);
+            }
+
+            function startScratch(event) {
+                isDrawing = true;
+                event.preventDefault(); 
+                const pos = getCursorPosition(event);
+                lastX = pos.x;
+                lastY = pos.y;
+                scratch(pos.x, pos.y);
+            }
+
+            function scratchMove(event) {
+                if (!isDrawing) return;
+                event.preventDefault(); 
+                const pos = getCursorPosition(event);
+                scratch(pos.x, pos.y, true); 
+                updateProgress(); 
+            }
+
+            function endScratch() {
+                isDrawing = false;
+            }
+
+            // Menghubungkan event listener
+            canvas.addEventListener('mousedown', startScratch);
+            canvas.addEventListener('mousemove', scratchMove);
+            canvas.addEventListener('mouseup', endScratch);
+            canvas.addEventListener('mouseleave', endScratch);
+
+            canvas.addEventListener('touchstart', startScratch);
+            canvas.addEventListener('touchmove', scratchMove);
+            canvas.addEventListener('touchend', endScratch);
+
+            initScratchLayer();
+            window.addEventListener('resize', initScratchLayer);
+        });
+    </script>
+</body>
+</html>
